@@ -1,0 +1,8 @@
+server/.env
+server/node_modules/
+server/test.js
+server/product_images/
+
+client/node_modules/
+admin_panel/node_modules/
+

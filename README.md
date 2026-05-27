@@ -1,19 +1,21 @@
-#E-Commerce Project
+# E-Commerce Project
 Built using Nodejs, ExpressJs, MongoDB, ReactJs
 One of my best projects with best security practices and clean and easy to manage code 
-#Project Highlights  
- > Implemented Pagination for the Products
- > Used Redux State management in frontend 
- > Created Mails service - used for security , information and otp alerts
- > JWT Authentication & Authorization
- > Password Recovery by sending Links 
- > Verifying Emails by sending Codes
- > RazorPay Payment integration and Verifying payments before creating orders
- > Session Tracking and Session Logout with device info and location
- > Admin Panel for Managing Products.,
- > Best Error Handling on both frontend and backend
- > Role based Access to API's User & Admin
- > Implemented Protected and Public API's
+
+# Project Highlights  
+ 1. Implemented Pagination for the Products
+ 2. Used Redux State management in frontend 
+ 3. Created Mails service - used for security , information and otp alerts
+ 4. JWT Authentication & Authorization
+ 5. Password Recovery by sending Links
+ 6. Implemented Rate limiting and Response slowdown Intentionally to reduce server overload after limited requests
+ 7. Verifying Emails by sending Codes
+ 8. RazorPay Payment integration and Verifying payments before creating orders
+ 9. Session Tracking and Session Logout with device info and location
+ 10. Admin Panel for Managing Products.,
+ 11. Best Error Handling on both frontend and backend
+ 12. Role based Access to API's User & Admin
+ 13. Implemented Protected and Public API's
 
 <img width="1600" height="900" alt="Screenshot from 2026-05-27 10-55-24" src="https://github.com/user-attachments/assets/223390d9-ea09-4644-95cc-9e267d8affb7" />
 <img width="1600" height="900" alt="Screenshot from 2026-05-27 10-55-33" src="https://github.com/user-attachments/assets/48050bc4-45dd-44b4-b761-0271ec1b49b6" />

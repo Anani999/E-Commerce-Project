@@ -1,0 +1,35 @@
+# E-Commerce Project
+Built using Nodejs, ExpressJs, MongoDB, ReactJs
+One of my best projects with best security practices and clean and easy to manage code 
+
+# Project Highlights  
+ 1. Implemented Pagination for the Products
+ 2. Used Redux State management in frontend 
+ 3. Created Mails service - used for security , information and otp alerts
+ 4. JWT Authentication & Authorization
+ 5. Password Recovery by sending Links
+ 6. Implemented Rate limiting and Response slowdown Intentionally to reduce server overload after limited requests
+ 7. Verifying Emails by sending Codes
+ 8. RazorPay Payment integration and Verifying payments before creating orders
+ 9. Session Tracking and Session Logout with device info and location
+ 10. Admin Panel for Managing Products.,
+ 11. Best Error Handling on both frontend and backend
+ 12. Role based Access to API's User & Admin
+ 13. Implemented Protected and Public API's
+
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-55-24" src="https://github.com/user-attachments/assets/223390d9-ea09-4644-95cc-9e267d8affb7" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-55-33" src="https://github.com/user-attachments/assets/48050bc4-45dd-44b4-b761-0271ec1b49b6" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-55-12" src="https://github.com/user-attachments/assets/df7db230-48e2-4f17-81a7-b5facc05a3b3" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-54-56" src="https://github.com/user-attachments/assets/e8fd89f7-ed7e-4e85-b8ad-e7cadfbf6add" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-56-05" src="https://github.com/user-attachments/assets/89ed52ef-5f0b-48da-8e89-231c9742eb5e" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-56-19" src="https://github.com/user-attachments/assets/9419a606-b25d-44a7-8b41-acdfb64fd545" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-56-43" src="https://github.com/user-attachments/assets/a3888fa4-5166-4778-81ec-3c9a872e4ee1" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-56-50" src="https://github.com/user-attachments/assets/763c27c0-3306-4e2a-89af-df02bcc08de8" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-57-02" src="https://github.com/user-attachments/assets/7284119e-dc85-4188-b656-c4b7b9fcc3ec" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-57-33" src="https://github.com/user-attachments/assets/1d9748e9-5d31-470a-a2c9-b99f08454487" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-57-44" src="https://github.com/user-attachments/assets/e83abda2-e37a-4a07-a87d-d2a18976f67f" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-57-52" src="https://github.com/user-attachments/assets/a5c83af3-2429-4188-9007-f517ed93a38d" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-58-04" src="https://github.com/user-attachments/assets/fa21eb20-86f0-4075-bf26-302572c4f5ef" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 10-59-15" src="https://github.com/user-attachments/assets/bd0804e4-e03c-49e6-aacf-c2e076339525" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 11-09-39" src="https://github.com/user-attachments/assets/51c324b8-3da9-4ad9-950b-7a8a02de4b13" />
+<img width="1600" height="900" alt="Screenshot from 2026-05-27 11-21-50" src="https://github.com/user-attachments/assets/a9cfa41e-e806-43ff-9c07-3758371e1e89" />

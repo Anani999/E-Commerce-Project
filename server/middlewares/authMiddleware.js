@@ -8,7 +8,7 @@ async function authMiddleware(req, res, next){
  if(!req.cookies){
   return badRequest(res, 'Cookies not included !')
  }
- console.log('Cookies : ', req.cookies);
+
  const token = req.cookies.token
  const clientId = req.cookies.clientId;
  // check if request has authorization header with value

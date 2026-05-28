@@ -32,7 +32,7 @@ function App() {
 
  useEffect(() => {
   dispatch(checkAuth());
-  //isServerActive();
+  isServerActive();
  },[]);
 
  async function isServerActive(){
@@ -40,6 +40,9 @@ function App() {
   const response = await apiRequest('GET', '/' );
   console.log('backend ? :',response);
   setSLoading(false)
+  if(response.success === true){
+   navigate('/')
+  }
   } catch(err) { 
    if(err.message.includes('NetworkError')){
      console.error('Server Connection Failed');

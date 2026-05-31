@@ -89,7 +89,7 @@ function ProductPage () {
   return <Loading message='One movement ...' />
  } else {
   return(
-   <div className='flex items-center gap-4'>
+   <div className='flex items-center gap-4 w-250 m-auto mt-10'>
     <img src={product.image} className='w-120 h-120' />
     <div className='flex flex-col gap-3 items-start'>
      <h1 className='text-3xl font-bold'> {product.name} </h1>

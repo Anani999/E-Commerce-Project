@@ -56,7 +56,7 @@ async function getProductById(req, res){
 // [ CONTROLLER GET PRODUCTS ]
 async function getProducts( req, res){
  const totalProducts = await Product.countDocuments();
- const pageSize = req.query.size || 3
+ const pageSize = 10
  const pages = Math.ceil(totalProducts/pageSize)
  const page = req.query.page || 1;
  const skips = (page - 1) * pageSize

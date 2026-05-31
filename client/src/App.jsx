@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { checkAuth } from './context/authSlice'
 import { useNavigate, Navigate, Outlet, Routes, Route } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
 
 import HomePage from './pages/Home'
 import Loading from './components/Loading'
@@ -21,12 +22,14 @@ import AuthSessions from './pages/account/Sessions'
 import NewPasswordForm from './pages/account/NewPasswordForm'
 import PasswordRecovery from './pages/account/PasswordRecovery'
 import CreateOrder from './pages/CreateOrder'
+import SearchProduct from './pages/SearchResult'
 
 function App() {
 
  const {isAuthenticated, loading} = useSelector((state) => state.auth);
  const dispatch = useDispatch();
  const navigate = useNavigate();
+ const notify = (message) => toast(message);
  
  const [sloading, setSLoading] = useState(true);
 
@@ -46,6 +49,7 @@ function App() {
   } catch(err) { 
    if(err.message.includes('NetworkError')){
      console.error('Server Connection Failed');
+     notify('Server was Down !');
      navigate('/server-down')
      setSLoading(false);
    }
@@ -54,25 +58,27 @@ function App() {
 
  return(
     <div className=''>
+    <ToastContainer/>
       <Routes>
-
-       <Route element={<Protected isAuth={isAuthenticated}/>} >
+       <Route element={<Home/>} >
         <Route path='/' element={<Products/>} />
         <Route path='/product/:id' element={<ProductPage/>} />
-        <Route path='/create-order/:id' element={<CreateOrder/>} />
-        <Route path='/account' element={<UserAccount/>}>
-         <Route index element={<AccountPage/>} />
-         <Route path='orders' element={<UserOrders/>} />
-         <Route path='sessions' element={<AuthSessions/>} />
+        <Route path='/search' element={<SearchProduct/>} /> 
+        <Route path='/payment-success' element={ <PaymentSuccess/> } />
+        <Route path='/server-down' element={<ServerDown/>} />
+        <Route path='/login' element={<LoginPage/>} />
+        <Route path='/register' element={<RegisterPage/>} />
+        <Route path='/auth/new-password-form' element={<NewPasswordForm/>} />
+        <Route path='/auth/password-recovery' element={<PasswordRecovery/>} />
+        <Route element={<Protected/>} >
+         <Route path='/create-order/:id' element={<CreateOrder/>} />
+         <Route path='/account' element={<UserAccount/>}>
+          <Route index element={<AccountPage/>} />
+          <Route path='orders' element={<UserOrders/>} />
+          <Route path='sessions' element={<AuthSessions/>} />
+         </Route>
         </Route>
-       </Route> 
-
-       <Route path='/payment-success' element={ <PaymentSuccess/> } />
-       <Route path='/server-down' element={<ServerDown/>} />
-       <Route path='/login' element={<LoginPage/>} />
-       <Route path='/register' element={<RegisterPage/>} />
-       <Route path='/auth/new-password-form' element={<NewPasswordForm/>} />
-       <Route path='/auth/password-recovery' element={<PasswordRecovery/>} />
+       </Route>
       </Routes>
     </div>
 );
@@ -80,17 +86,18 @@ function App() {
 }
 
 
-function Protected({ isAuth }) {
- const navigate = useNavigate();
- console.log('Auth Status :',isAuth);
- useEffect(() => {
-  if(isAuth !== true){
-   navigate('/login');
-  }
- }, [isAuth])
+function Protected() {
+ const { isAuthenticated } = useSelector((state) => state.auth);
+ return isAuthenticated ? <Outlet/> : <Navigate to='login' />
+}
 
- if(isAuth === true){ return (<><Navbar/> <Outlet/></>) }
-
+function Home() {
+ return(
+  <>
+   <Navbar/>
+   <Outlet/>
+  </>
+ );
 }
 
 export default App

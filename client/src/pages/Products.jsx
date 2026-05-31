@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import Loading from '../components/Loading'
 import Button from '../components/Button'
 import SearchBar from '../components/SearchBar'
-import Slider from '../components/Slider'
-
 
 function Products () {
 
@@ -23,7 +21,7 @@ function Products () {
 
  async function fetchProducts () {
   setLoading(true);
-  const response = await apiRequest('GET', `/api/product?page=${page}&size=10`);
+  const response = await apiRequest('GET', `/api/product?page=${page}`);
   setLoading(false);
   if(response.success === true){
    setProducts(response.data.products);
@@ -43,8 +41,6 @@ function Products () {
 
  return (
   <div className='flex flex-col items-center gap-3 m-3'>  
-   <SearchBar setResult={setProducts}/>
-   <Slider />
    <div className='flex flex-wrap items-center justify-center p-2 gap-3'>
    {products.map((product) => (
     <div className=' flex flex-col items-center border border-gray-500 rounded p-1 cursor-pointer' onClick={() => handleClick(product._id)} key={product._id}>

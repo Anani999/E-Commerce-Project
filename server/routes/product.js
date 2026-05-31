@@ -8,9 +8,9 @@ const router = express.Router();
 const upload = multer({ dest: 'product_images/'});
 
 router.post('/', auth, admin, upload.single('image'), createProduct);
-router.get('/search', auth, searchProducts)
-router.get('/:id', auth, getProductById);
-router.get('/', auth, getProducts);
+router.get('/search', searchProducts)
+router.get('/', getProducts);
+router.get('/:id', getProductById);
 router.delete('/:id', auth, admin,  deleteProduct);
 router.put('/:id', auth, admin, updateProduct)
 

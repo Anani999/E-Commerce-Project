@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import SearchBar from './SearchBar'
 import logo from '../assets/images/logo.png'
 
 function Navbar () {
-
+ const {isAuthenticated, user} = useSelector((state) => state.auth);
  return (
   <div className='flex items-center shadow p-3 justify-evenly'>
    <Link to='/'>
@@ -12,8 +14,8 @@ function Navbar () {
     </div> 
    </Link>
    <Link to='/'> <b> Home </b> </Link>
-   <b className='text-gray-500'> Cart </b>
-   <Link to='/account' > <b className='text-gray-500' > Account </b> </Link>
+   <SearchBar />
+   {isAuthenticated ? <Link to='/account' > <b> Account </b>  </Link> : <Link to='/login'> <b> Login </b> </Link> }
   </div>
  );
 

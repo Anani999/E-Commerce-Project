@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { apiRequest } from '../utils/api.js'
+import { useNavigate } from 'react-router-dom'
 import Button from './Button'
 
 
@@ -7,21 +8,15 @@ function SearchBar({setResult}) {
  
  const [searchTerm, setSearchTerm] = useState('');
  const [message, setMessage] = useState('');
+ const navigate = useNavigate();
  
  async function handleSearch(){
-  if(!searchTerm) {alert('Type something ')}
-  const response = await apiRequest('GET', '/api/product/search?name='+searchTerm);
-  if(response.success === true){
-   setResult(response.data.products)
-  } else { setMessage(response.message) }
+  navigate('/search?term='+searchTerm);
+  return
  }
 
  async function handleClear() {
-  setSearchTerm('');
-  const response = await apiRequest('GET', '/api/product?page=1&size=10');
-  if(response.success === true){
-   setResult(response.data.products);
-  } else { setMessage(response.message) }
+  navigate('/');
  }
 
  return(

@@ -24,8 +24,10 @@ function Login () {
   }
  },[isAuthenticated])
 
- function handleLogin() {
-  dispatch( loginUser({ username, password }) );
+ async function handleLogin() {
+  window.grecaptcha.enterprise.ready(() => console.log('ready'));
+  const token = await window.grecaptcha.enterprise.execute('6LebgActAAAAAOldcasnHNvySYBh-Szb2D5GmeNc', { action: 'LOGIN' });
+  dispatch( loginUser({ username, password, token }) );
  }
 
  return(

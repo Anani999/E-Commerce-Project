@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import apiRequest, { rawApiRequest } from '../utils/api.js'
 import Button from '../components/Button'
 import Loading from '../components/Loading'
+import { loadScript } from '../utils/general.js'
 
 
 function CreateOrder() {
@@ -43,20 +44,6 @@ function CreateOrder() {
    setBlock(response[0].PostOffice[0].Block);
    setState(response[0].PostOffice[0].State);
   } else {setMessage('No records found for the pincode')}
- }
-
- function loadScript(src) {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.onload = () => {
-     resolve(true);
-    };
-    script.onerror = () => {
-     resolve(false);
-    };
-    document.body.appendChild(script);
-  });
  }
 
  async function handleBuy() {

@@ -10,6 +10,7 @@ import sendMail from '../services/mail.js'
 import { genOtp } from '../utils/helper.js'
 import geo_ip from 'geoip-lite'
 import crypto from 'crypto'
+import { verifyCaptcha } from '../utils/auth.js'
 
 
 async function registerUser(req,res){
@@ -17,8 +18,8 @@ async function registerUser(req,res){
  if(!req.body) { return badRequest(res, 'Invalid body type!') }
  const {email, username, otp} = req.body;
  if(!email || !otp || !username){
-  return res.status(400).json({success:false, message:'email or otp missing'});
- } 
+  return res.status(400).json({success:false, message:'email, otp or token missing'});
+ }
  const preUser = await PreUser.findOne({ email, username });
  if(!preUser) { return badRequest(res, 'No OTP sent to email : '+email) }
  if(Number(otp) !== Number(preUser.otp)) { return badRequest(res, 'Wrong OTP')}
@@ -40,9 +41,14 @@ async function registerUser(req,res){
 
 export async function createPreUser (req, res) {
  try{
-  const { username, password, email } = req.body
-  if(!username | !password | !email) { return badRequest(res, 'Required things missing username , password or email') }  
+  const { username, password, email, token } = req.body
+  if(!username | !password | !email | !token) { return badRequest(res, 'Required things missing username, email, token') }  
   if(username.length < 5) { return badRequest('short username must atleast 5 characters') }
+  
+  const v_captcha = await verifyCaptcha(token , 'REGISTER');
+  if(v_captcha.success !== true) return badRequest(res, 'Invalid Request');
+  if(v_captcha.score < 0.7) return badRequest(res, 'Invalid request');
+
   const existingUser = await User.findOne({
    $or: [
     { email },
@@ -86,11 +92,14 @@ async function loginUser(req,res){
 
  const env = process.env.ENV;
 
- if(!req.body) { return badRequest(res, 'Invalid body type!') }
+ if(!req.body) return badRequest(res, 'invalid request type');
+ const { username, password, token } = req.body;
 
- const {username, password} = req.body;
+ if(!username || !password || !token){ return badRequest(res, 'username, passowrd and token required!') };
 
- if(!username || !password){ return badRequest(res, 'username and passowrd required!') };
+ const score = await verifyCaptcha(token, 'LOGIN');
+ if(score.success !== true) return badRequest(res, 'Invalid request');
+ if(score.score < 0.7) return badRequest(res, 'Invalid request');
 
  devLog('Triggered Login for User : '+req.body.username, env);
 
@@ -103,7 +112,7 @@ async function loginUser(req,res){
  if(passCorrect !== true){return res.status(400).json({ success:false, message: 'invalid username or password'})};
 
  //create jwt token with user id 
- const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn:process.env.TOKEN_EXPIRY});
+ const jwt_token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn:process.env.TOKEN_EXPIRY});
 
  let client_id = req.cookies.clientId;
  let session;
@@ -111,7 +120,7 @@ async function loginUser(req,res){
   client_id = Date.now();
  }
  const user_agent = req.rawHeaders[3];
- const hashed_token = crypto.createHash('sha256').update(token).digest('hex');
+ const hashed_token = crypto.createHash('sha256').update(jwt_token).digest('hex');
  const clientIp = req.ip;
  session = await Session.findOneAndUpdate({ client_id: client_id, account: user._id }, { token: hashed_token, status: 'active' });
  const geo = geo_ip.lookup(clientIp);
@@ -125,7 +134,7 @@ async function loginUser(req,res){
  devLog('Login success for user : '+user.username+ ' New token issued with expiry : '+process.env.TOKEN_EXPIRY, env);
  const sendAlert = await sendMail(user.email, 'New login to your account', `Some one is logged in to your account by your username is that you ?\n if not change your pass now !`)
  
- res.cookie('token', token, {httpOnly: true, secure: false, sameSite: 'lax', maxAge: 1 * 24 * 60 * 60 * 1000});
+ res.cookie('token', jwt_token, {httpOnly: true, secure: false, sameSite: 'lax', maxAge: 1 * 24 * 60 * 60 * 1000});
  res.cookie('clientId', client_id, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 365 * 24 * 60 * 60 * 1000 });
  res.status(200).json({ success: true, message:'Login Success !', data: { user}} );
 }
@@ -138,23 +147,6 @@ export async function logout( req, res) {
  session.status = 'revoked';
  await session.save();
  res.clearCookie('token', { httpOnly: true, secure: false}).json({ success: true, message: 'Logout Success'});
-}
-
-
-export async function test(req, res) {
- console.log('Working testing ...', req.rawHeaders[3]);
- const clientIp = req.ip
- const geo = geo_ip.lookup(clientIp);
- let location = {timezone: '', country: ''};
- if(geo){ location = {timezone: geo.timezone, country: geo?.country} }
- const session = await Session.create({
-        token: "jf939jfj39gde8j3*(8ij83",
-        account: "93jf39jj9fu49ut",
-        client_id: "1779113901635",
-        user_agent: "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:150.0) Gecko/20100101 Firefox",
-        location: location
- });
- return success(res, 'Working testing...', {session});
 }
 
 
@@ -173,12 +165,17 @@ export async function revokeSession(req, res) {
 
 
 export async function recoverPassword(req, res) {
- const email = req.body.email;
- if(!email) { return badRequest(res, 'Email is required' )}
+ const { email, token } = req.body;
+ if(!email || !token) { return badRequest(res, 'Email and token required' )}
+
+ const assessment = await verifyCaptcha(token, "PASSWORD_RECOVERY");
+ if(assessment.status !== true) return badRequest(res, 'Not valid request');
+ if(assessment.score < 0.7) return badRequest(res, 'Not valid request');
+
  const user = await User.findOne({ email });
  if(!user) { return badRequest(res, 'No account found' )};
- const token = await jwt.sign({ _id: user._id, username: user.username }, process.env.JWT_FORGET_PASS_SECRET, { expiresIn: '5m'});
- const htmlContent = `<h1> Forget Password Recovery Link </h1> <br/> <p> Hi ${user.username} your link to reset password is below <br/> it's only valid for 5 minutes </p> <br/> <a href="${process.env.CLIENT_URL}/auth/new-password-form?token=${token}" > Reset Password </a>  `
+ const jwt_token = await jwt.sign({ _id: user._id, username: user.username }, process.env.JWT_FORGET_PASS_SECRET, { expiresIn: '5m'});
+ const htmlContent = `<h1> Forget Password Recovery Link </h1> <br/> <p> Hi ${user.username} your link to reset password is below <br/> it's only valid for 5 minutes </p> <br/> <a href="${process.env.CLIENT_URL}/auth/new-password-form?token=${jwt_token}" > Reset Password </a>  `
  const sendLink = await sendMail(user.email, 'Password Recovery Mail', '', htmlContent);
  if(sendLink.success === true){
   success(res, 'Password Recovery email sent to '+email);

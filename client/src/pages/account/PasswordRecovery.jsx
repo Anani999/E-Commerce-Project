@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import apiRequest from '../../utils/api.js'
 import Loading from '../../components/Loading'
 
@@ -6,11 +6,13 @@ function PR() {
  const [message, setMessage] = useState('');
  const [email, setEmail] = useState('')
  const [loading, setLoading] = useState(false);
- 
+
  async function handleSubmit(e) {
   e.preventDefault();
+  window.grecaptcha.enterprise.ready(() => console.log('page loaded'));
+  const token = await window.grecaptcha.enterprise.execute(import.meta.env.VITE_RECAPTCHA_KEY, { action: 'PASSWORD_RECOVERY' });
   setLoading(true);
-  const response = await apiRequest('POST', '/api/auth/recover-password', {}, {email} );
+  const response = await apiRequest('POST', '/api/auth/recover-password', {}, {email, token} );
   setMessage(response.message);
   setLoading(false);
  } 

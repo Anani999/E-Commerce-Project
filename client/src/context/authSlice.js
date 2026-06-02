@@ -11,14 +11,14 @@ const initialState = {
 
 export const loginUser = createAsyncThunk (
  'auth/loginUser',
- async ({ username, password }, thunkAPI) => {
+ async ({ username, password, token }, thunkAPI) => {
   try{
 
    const response = await apiRequest(
     'POST',
     '/api/auth/login',
     {'Content-Type': 'application/json'},
-    { username, password  }
+    { username, password, token  }
    );
 
    if (response.success !== true){

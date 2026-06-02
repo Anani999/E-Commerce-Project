@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { checkAuth } from './context/authSlice'
 import { useNavigate, Navigate, Outlet, Routes, Route } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
+import { apiRequest, backend_url } from './utils/api.js'
+import { loadScript } from './utils/general.js'
 
 import HomePage from './pages/Home'
 import Loading from './components/Loading'
@@ -17,7 +19,6 @@ import PaymentSuccess from './pages/PaymentSuccess'
 import ServerDown from './pages/ServerDown'
 import LoginPage from './pages/Login'
 import RegisterPage from './pages/Register'
-import { apiRequest, backend_url } from './utils/api.js'
 import AuthSessions from './pages/account/Sessions'
 import NewPasswordForm from './pages/account/NewPasswordForm'
 import PasswordRecovery from './pages/account/PasswordRecovery'
@@ -65,7 +66,6 @@ function App() {
         <Route path='/product/:id' element={<ProductPage/>} />
         <Route path='/search' element={<SearchProduct/>} /> 
         <Route path='/payment-success' element={ <PaymentSuccess/> } />
-        <Route path='/server-down' element={<ServerDown/>} />
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/register' element={<RegisterPage/>} />
         <Route path='/auth/new-password-form' element={<NewPasswordForm/>} />
@@ -79,6 +79,7 @@ function App() {
          </Route>
         </Route>
        </Route>
+       <Route path='/server-down' element={<ServerDown/>} />
       </Routes>
     </div>
 );
@@ -92,6 +93,11 @@ function Protected() {
 }
 
 function Home() {
+
+ useEffect(() => {
+  loadScript('https://www.google.com/recaptcha/enterprise.js?render='+ import.meta.env.VITE_RECAPTCHA_KEY);
+ },[]);
+
  return(
   <>
    <Navbar/>

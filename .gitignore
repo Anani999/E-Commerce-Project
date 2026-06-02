@@ -4,5 +4,7 @@ server/test.js
 server/product_images/
 
 client/node_modules/
+client/.env
+
 admin_panel/node_modules/
 

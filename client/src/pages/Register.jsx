@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import apiRequest from '../utils/api'
 import Logo from '../components/Logo'
@@ -18,7 +18,9 @@ function Register() {
  async function handleSubmit(event) {
   event.preventDefault();
   setLoading(true);
-  const response = await apiRequest('POST', '/api/auth/register', {}, { username, password, email });
+  window.grecaptcha.enterprise.ready(() => console.log('site loaded'));
+  const token = await window.grecaptcha.enterprise.execute(import.meta.env.VITE_RECAPTCHA_KEY, { action: 'REGISTER' });
+  const response = await apiRequest('POST', '/api/auth/register', {}, { username, password, email, token });
   setMessage(response.message);
   setLoading(false)
   if(response.success === true){

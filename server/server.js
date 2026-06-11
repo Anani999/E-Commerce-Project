@@ -7,6 +7,7 @@ import { success, serverError, badRequest } from './utils/apiResponse.js'
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/product.js'
 import orderRoutes from './routes/order.js'
+import userRoutes from './routes/user.js'
 
 import devLog from './utils/env.js'
 
@@ -23,10 +24,11 @@ const env = process.env.ENV;
 app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', auth,  (req, res) => success(res, `Hi ${req.user.username}`))
 app.get('/admin', auth, admin,  (req, res) => success(res, `Hi ${req.user.username}`))
-app.get('/api/user', auth, (req, res) => success(res, 'User fetched Succesfully !', {user:req.user}))
+
 
 // Error Handler 
 function ErrorHandler(err, req, res, next){

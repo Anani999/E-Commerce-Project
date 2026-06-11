@@ -3,12 +3,13 @@ import { createProduct, getProductById, getProducts, deleteProduct, updateProduc
 import multer from 'multer'
 
 import auth, {adminMiddleware as admin} from '../middlewares/authMiddleware.js'
+import verifyCaptcha from '../middlewares/verifyCaptcha.js'
 
 const router = express.Router();
 const upload = multer({ dest: 'product_images/'});
 
-router.post('/', auth, admin, upload.single('image'), createProduct);
-router.get('/search', searchProducts)
+router.post('/', auth, admin, upload.single('image'), createProduct );
+router.get('/search', searchProducts );
 router.get('/', getProducts);
 router.get('/:id', getProductById);
 router.delete('/:id', auth, admin,  deleteProduct);

@@ -51,7 +51,8 @@ function Orders() {
    <span> <b> Payment </b> <p> { order.paymentCompleted ? "Done" : "Pending.." } </p> </span>
    <span> <b> Amount </b> <p> {order.amount} </p> </span>
    <span> <b> Units </b> <p> {order.units} </p> </span>
-   <span> <b> Address </b> <p> {order.address.house} |  {order.address.area} |  {order.address.block} </p> </span>
+   <span> <b> Address </b> <p> {order.address.house | ''} |  {order.address.area | ''} |  {order.address.district | ''} </p> </span>
+   <span> <b> Phone : {order.address.phone | ''}</b> </span>
   </div>
 
  </div>

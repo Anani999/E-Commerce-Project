@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
   maxLength: 50,
   minLength: 5,
  },
+ name: String,
+ phone: String,
  password:{
   type: String,
   select: false,
@@ -30,7 +32,7 @@ const userSchema = new mongoose.Schema({
   type: "String",
   default: "user",
   enum: ["user", "admin"]
- }
+ },
 });
 
 userSchema.index({username: 1}, {unique:true});

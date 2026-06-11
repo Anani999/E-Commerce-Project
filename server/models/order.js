@@ -27,16 +27,13 @@ const orderSchema = new mongoose.Schema({
  
  amount: Number,
  payment_id: String,
+ units: Number,
  address: {
-  pinCode: String,
-  block: String,
-  state: String,
-  area: String,
-  house: String,
- },
- units: Number
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'Address'
+ }
 
-});
+}, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
 

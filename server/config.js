@@ -26,7 +26,8 @@ async function Configs(app){
  app.set('trust proxy', 1)
  
  //rate limiting 
- const limiter = rateLimiter({ windowMs: 10 * 60 * 1000, max: 100});
+ const minutes = process.env.ENV === 'DEV' ? 1 : 10;
+ const limiter = rateLimiter({ windowMs: minutes * 60 * 1000, max: 100});
  // slow downer
  const slowDowner = slowDown({ windowMs: 1 * 60 * 1000, delayAfter: 10, delayMs: () => 3000});
 

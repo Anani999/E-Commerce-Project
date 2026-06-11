@@ -15,11 +15,14 @@ function Products () {
  const [message, setMessage] = useState('');
  
  useEffect(() => {
+  console.log('Products Page rendering');
   fetchProducts();
-  console.log('Products Page rendering')
  },[page]);
 
  async function fetchProducts () {
+  //window.grecaptcha.enterprise.ready();
+  //console.log('info :', import.meta.env.VITE_RECAPTCHA_KEY, window.grecaptcha );
+  //const token = await window.grecaptcha.enterprise.execute(import.meta.env.VITE_RECAPTCHA_KEY, { action: 'GET_PRODUCTS' });
   setLoading(true);
   const response = await apiRequest('GET', `/api/product?page=${page}`);
   setLoading(false);

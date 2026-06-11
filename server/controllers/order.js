@@ -1,10 +1,10 @@
 import crypto from 'crypto'
-import Order from '../models/order.js'
-import { badRequest, success } from '../utils/apiResponse.js'
 import Razorpay from 'razorpay'
 
 import sendMail from '../services/mail.js'
-
+import { badRequest, success } from '../utils/apiResponse.js'
+import Order from '../models/order.js'
+import { createAddress } from '../services/address.js'
 
 
 export async function createOrder( req, res) {
@@ -42,7 +42,7 @@ export async function updateOrderStatus (req, res) {
 
 
 export async function getOrders ( req, res) {
-  const orders = await Order.find({ user: req.user.id }).populate('product');
+  const orders = await Order.find({ user: req.user.id }).populate('product address');
   return success(res, 'Orders fetched successfully !', { orders });
 }
 
@@ -59,7 +59,7 @@ export async function getOrder ( req, res) {
 
  if(!id){ return badRequest(res, 'Id is missing !')}
 
- const order = await Order.findById(id).populate('product user');
+ const order = await Order.findById(id).populate('product user address');
  if(!order) {
   return badRequest(res, 'No orders found with : '+id);
  }
@@ -68,9 +68,17 @@ export async function getOrder ( req, res) {
 
 
 export async function verifyPayment ( req, res) {
- const { razorpay_order_id, razorpay_payment_id, razorpay_signature,  razor_order, product, address, units } = req.body.data;
+ const { 
+  razorpay_order_id, 
+  razorpay_payment_id, 
+  razorpay_signature,  
+  razor_order, product, 
+  address, 
+  units 
+ } = req.body.data;
 
  if(!razorpay_order_id | !razorpay_payment_id | !razorpay_signature) { return badRequest(res, 'things required missing ')}; 
+ if(typeof address !== 'string') return badRequest(res, 'invalid address type must be an id');
  const body = razorpay_order_id +"|" + razorpay_payment_id;
 
  //console.log('razor_order ',razor_order );
@@ -81,6 +89,8 @@ export async function verifyPayment ( req, res) {
   .digest('hex');
 
  if(expectedSignature === razorpay_signature) {
+  console.log('Got address : ', address);
+
   const order = await Order.create({
    paymentCompleted: true,
    product,
